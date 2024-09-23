@@ -1,0 +1,45 @@
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  application:
+    name: chat-services
+
+  datasource:
+    url: jdbc:postgresql://localhost:6432/cammoa
+    username: cammoa
+    password: cammoa
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  # RabbitMQ 설정 추가
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: chat
+
+jwt:
+  header: Authorization
+  secret: 36115f098c6ee700e838c927205161eec6095683f2036d8981316e8739f4696b79b29bc1c882a75e13f3bc104a4e487ad320b107c4a03f61d5862e26cff9d31a
+  token-validity-in-seconds: 86400
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
