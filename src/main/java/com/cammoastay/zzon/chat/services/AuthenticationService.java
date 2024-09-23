@@ -13,8 +13,6 @@ public class AuthenticationService {
     private final JwtUtil jwtUtil;
     private final MemberService memberService;
 
-    private ChatService chatService;
-
     public AuthenticationService(JwtUtil jwtUtil, MemberService memberService) {
         this.jwtUtil = jwtUtil;
         this.memberService = memberService;

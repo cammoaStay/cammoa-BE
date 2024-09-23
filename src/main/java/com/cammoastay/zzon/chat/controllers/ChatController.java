@@ -8,12 +8,9 @@ import com.cammoastay.zzon.chat.entities.MessageEntity;
 import com.cammoastay.zzon.chat.services.AuthenticationService;
 import com.cammoastay.zzon.chat.services.ChatService;
 import com.cammoastay.zzon.jointest.MemberEntity;
-import com.cammoastay.zzon.jointest.MemberService;
 import com.cammoastay.zzon.login.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,7 +24,6 @@ public class ChatController {
 
     private final ChatService chatService;
     private final AuthenticationService authenticationService;
-    private final JwtUtil jwtUtil;
 
     @PostMapping
     public ChatroomDto createChatroom(
