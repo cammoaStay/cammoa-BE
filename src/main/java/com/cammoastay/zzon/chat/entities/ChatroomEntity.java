@@ -21,7 +21,7 @@ public class ChatroomEntity {
     Long id;
     String title;
 
-    @OneToMany(mappedBy = "chatroomEntity" , fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "chatroomEntity" , fetch = FetchType.LAZY)
     Set<ChatroomMappingEntity> chatroomMappingEntitySet;
     // Set 사용하여 중복불가 , 동일한 객체 저장 방지
     // 특정 상황에서 중복이 논리적으로 허용되지 않는 경우(예: 동일한 회원이 동일한 채팅방에 여러 번 매핑될 수 없을 때)

@@ -24,6 +24,7 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class ChatService {
 
     private final ChatroomRepository chatroomRepository;
@@ -32,7 +33,7 @@ public class ChatService {
     private final SaveTestRepository saveTestRepository;
 
 // 반환된 채팅방 객체는 저장된 후 사용자에게 보여주기 위해 반환됩니다.
-    @Transactional
+
     public ChatroomEntity createChatroom(MemberEntity member, String title) {
 
         ChatroomEntity chatroomEntity = ChatroomEntity.builder()
@@ -83,16 +84,13 @@ public class ChatService {
        }
         ChatroomMappingEntity chatroomMappingEntity = memberChatroomMappingRepository.findByMemberEntityIdAndChatroomEntityId(memberEntity.getId(), currentChatroomId)
                 .orElseThrow(() -> new MappingCustomException("An error occurred while processing the request."));
-
         // 마지막 확인 시간을 업데이트
         chatroomMappingEntity.updateLastCheckedAt();
-
         // 변경 사항을 저장
         memberChatroomMappingRepository.save(chatroomMappingEntity);
         // 특정사용자 채팅방 마지막확인시간 저장, 활용하여 새로운 메시지 알림 기능구현가능
     }
     // 트랜잭션적용하여 삭제작업중 문제발생하면 자동으로 롤백
-    @Transactional
     public Boolean leaveChatroom(MemberEntity memberEntity, Long chatroomId) {
         if(!memberChatroomMappingRepository.existsByMemberEntityIdAndChatroomEntityId(memberEntity.getId(), chatroomId)) {
             log.info("참여하지 않은 방입니다.");
@@ -104,7 +102,7 @@ public class ChatService {
         // 하나의쿼리로 개선 , 아무것도 삭제하지않으면 false 하는 구조로 변경 , 조회결과를 바로삭제 하는방법
     }
 
-
+    @Transactional(readOnly = true)
     public List<ChatroomEntity> getChatroomList(MemberEntity memberEntity){
         List<ChatroomMappingEntity> chatroomMappingEntityList = memberChatroomMappingRepository.findAllByMemberEntityId(memberEntity.getId());
         return chatroomMappingEntityList.stream() // List -> stream 으로 변환
@@ -125,17 +123,19 @@ public class ChatService {
 
         MessageEntity message = MessageEntity.builder()
                 .text(text)
-                .member(memberEntity)
-                .chatroom(chatroomEntity)
+                .nickName(memberEntity.getNickName())
+                .chatroomId(String.valueOf(chatroomEntity.getId()))
                 .createdAt(LocalDateTime.now())
                 .build();
                 return messageMongoRepository.save(message);
 
     }
+
+    @Transactional(readOnly = true)
    public List<MessageEntity> getMessageList(String chatroomId) {
         return messageMongoRepository.findAllByChatroomId(chatroomId);
    }
-
+    @Transactional(readOnly = true)
     public ChatroomDto getChatroom(Long chatroomId) {
         ChatroomEntity chatroomEntity = chatroomRepository.findById(chatroomId).get();
         return ChatroomDto.from(chatroomEntity);
