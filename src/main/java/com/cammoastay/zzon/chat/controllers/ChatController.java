@@ -32,7 +32,7 @@ public class ChatController {
     )
     {
         Optional<MemberEntity> member = authenticationService.memberFindByToken(token);
-        // jwt를 서비스단에 보내 member를 찾아 저장
+        // jwt를 추출 , 해당되는 member 찾아 저장
         ChatroomEntity chatroom = chatService.createChatroom(member.orElse(null), title);
         return ChatroomDto.from(chatroom);
     }
