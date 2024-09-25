@@ -33,7 +33,6 @@ public class ChatService {
     private final SaveTestRepository saveTestRepository;
 
 // 반환된 채팅방 객체는 저장된 후 사용자에게 보여주기 위해 반환됩니다.
-
     public ChatroomEntity createChatroom(MemberEntity member, String title) {
 
         ChatroomEntity chatroomEntity = ChatroomEntity.builder()
@@ -78,13 +77,13 @@ public class ChatService {
 
   private void updateLastCheckedAt(MemberEntity memberEntity, Long currentChatroomId) {
        if (currentChatroomId == null) {
-           // currentChatroomId가 null인 경우 처리 로직 (예: 로그 출력, 다른 처리 수행 등)
+           // currentChatroomId가 null인 경우 재차확인
            log.warn("currentChatroomId is null. Skipping updateLastCheckedAt.");
            return;
        }
         ChatroomMappingEntity chatroomMappingEntity = memberChatroomMappingRepository.findByMemberEntityIdAndChatroomEntityId(memberEntity.getId(), currentChatroomId)
                 .orElseThrow(() -> new MappingCustomException("An error occurred while processing the request."));
-        // 마지막 확인 시간을 업데이트
+        // 마지막 확인 시간을 업데이트, 해당되는 데이터없을시 customException 발생
         chatroomMappingEntity.updateLastCheckedAt();
         // 변경 사항을 저장
         memberChatroomMappingRepository.save(chatroomMappingEntity);
@@ -105,14 +104,17 @@ public class ChatService {
     @Transactional(readOnly = true)
     public List<ChatroomEntity> getChatroomList(MemberEntity memberEntity){
         List<ChatroomMappingEntity> chatroomMappingEntityList = memberChatroomMappingRepository.findAllByMemberEntityId(memberEntity.getId());
-        return chatroomMappingEntityList.stream() // List -> stream 으로 변환
+
+        return chatroomMappingEntityList.stream()
                 .map(chatroomMappingEntity -> {
                     ChatroomEntity chatroomEntity = chatroomMappingEntity.getChatroomEntity();
-                    chatroomEntity.setHasNewMessage(messageMongoRepository.existsByChatroomIdAndCreatedAtAfter(String.valueOf(chatroomEntity.getId()), chatroomMappingEntity.getLastCheckedAt()));
-        // Stream API를 사용하여 memberChatroomMappingList를 처리 합니다.
+                    chatroomEntity.setHasNewMessage(messageMongoRepository.existsByChatroomIdAndCreatedAtAfter(String.valueOf(chatroomEntity.getId()), chatroomMappingEntity.getLastCheckedAt()
+                        )
+                    );
                     return chatroomEntity;
                 })
                 .toList();
+        // 접속한 id가 입장하고있는 모든 연관된 채팅방 정보를 모두 리스트로 불러와 저장합니다.
     }
 
     public MessageEntity saveMessage(Optional<MemberEntity> optionalMemberEntity, Long chatroomId, String text) {

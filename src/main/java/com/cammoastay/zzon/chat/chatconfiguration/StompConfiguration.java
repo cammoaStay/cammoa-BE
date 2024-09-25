@@ -32,6 +32,7 @@ public class StompConfiguration implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(jwtHandshakeInterceptor);  // ChannelInterceptor 사용
+        registration.interceptors(jwtHandshakeInterceptor);
+        // jwt사용시 커스텀 헤더 연결전에 사용해야 하므로 연걸전에 인터셉트진행
     }
 }
