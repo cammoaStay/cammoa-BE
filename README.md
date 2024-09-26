@@ -5,7 +5,7 @@
 스프링부트 + 리액트를 활용한 캠핑장 예약 구현
 <br>
 <p align="center">
-  <img src="https://github.com/bamyanggang-project/bamyanggang-BE/assets/151708233/742e773e-2a98-44e6-9d78-0528f8ebf3f3">
+  로고추가예정
 </p>
 
 # 1. 프로젝트 소개
