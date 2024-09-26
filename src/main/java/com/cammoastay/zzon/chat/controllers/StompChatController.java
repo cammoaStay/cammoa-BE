@@ -5,7 +5,6 @@ import com.cammoastay.zzon.chat.entities.MessageEntity;
 import com.cammoastay.zzon.chat.services.ChatService;
 import com.cammoastay.zzon.jointest.MemberEntity;
 import com.cammoastay.zzon.jointest.MemberService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.*;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;

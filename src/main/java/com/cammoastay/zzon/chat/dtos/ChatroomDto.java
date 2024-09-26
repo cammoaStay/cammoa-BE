@@ -13,8 +13,9 @@ public record ChatroomDto(
         LocalDateTime createAt) {
 
     public static ChatroomDto from(ChatroomEntity chatroomEntity) {
-        return new ChatroomDto(chatroomEntity.getId(), chatroomEntity.getTitle(), chatroomEntity.getHasNewMessage(), chatroomEntity.getChatroomMappingEntitySet().size(), chatroomEntity.getCreateAt())
-;    }
+        return new ChatroomDto(chatroomEntity.getId(), chatroomEntity.getTitle(), chatroomEntity.getHasNewMessage()
+                ,chatroomEntity.getChatroomMappingEntitySet().size(), chatroomEntity.getCreateAt());
+    }
 
 
 }

@@ -33,6 +33,6 @@ public class StompConfiguration implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(jwtHandshakeInterceptor);
-        // jwt사용시 커스텀 헤더 연결전에 사용해야 하므로 연걸전에 인터셉트진행
+        // jwt사용시 연결전에 커스텀헤더 사용해야 하므로 연걸전에 인터셉트진행
     }
 }
