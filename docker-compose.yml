@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  react-app:
+    build:
+      context: ../frontend  # React 레포지토리의 경로
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+
+  springboot-app:
+    image: your-springboot-app-image
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - redis
+      - mongo
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: cammoadata
+      POSTGRES_USER: cammoastay
+      POSTGRES_PASSWORD: cammoastay
+    ports:
+      - "5432:5432"
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
+  ngrinder:
+    image: ngrinder/ngrinder-controller
+    ports:
+      - "8081:8080"
